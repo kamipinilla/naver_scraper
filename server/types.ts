@@ -10,6 +10,10 @@ export interface RestError {
   message: string
 }
 
+export interface RestSuccess {
+  message: string
+}
+
 export interface SentPair {
   targetSent: string
   sourceSent: string

@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
       content
     })
   } else {
-    const errorMsg = 'There are no html updates'
+    const errorMsg = 'There are no HTML updates'
     console.error(errorMsg)
     res.status(400).json({ message: errorMsg } as RestError)
   }

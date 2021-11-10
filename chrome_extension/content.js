@@ -40,13 +40,23 @@ async function postToMiddleServer(obj, apiPath) {
 
   const fetchUrl = `${proxyServerUrl}/${middleServerUrl}/${apiPath}`
 
-  await fetch(fetchUrl, {
+  const response = await fetch(fetchUrl, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(obj),
   })
+
+  if (!response.ok) {
+    const json = await response.json()
+    const restError = json
+    throw Error(restError.message)
+  } else {
+    const json = await response.json()
+    const successObj = json
+    console.log(successObj.message)
+  }
 
   closeTab()
 }

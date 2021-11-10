@@ -1,11 +1,6 @@
-import { Schema } from 'mongoose'
 import { model, Model } from 'mongoose'
+import { HtmlUpdateSchema } from '../schemas'
 import { HtmlUpdateDb } from '../types'
-
-
-export const HtmlUpdateSchema = new Schema({
-  content: { type: String, required: true }
-})
 
 const HtmlUpdateModel: Model<HtmlUpdateDb> = model('HtmlUpdate', HtmlUpdateSchema)
 

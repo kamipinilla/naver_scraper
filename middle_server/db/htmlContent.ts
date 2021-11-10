@@ -1,4 +1,4 @@
-import { HtmlUpdateSchema } from '../../server/db/htmlContent'
+import { HtmlUpdateSchema } from '../../server/schemas'
 import { HtmlUpdateDb } from '../../server/types'
 import { model, Model } from 'mongoose'
 
@@ -10,10 +10,10 @@ export async function setHtmlContent(content: string): Promise<void> {
     const firstHtmlUpdate = htmlUpdates[0]
     firstHtmlUpdate.content = content
     await firstHtmlUpdate.save()
-    console.log('Updated')
+    console.log('HTML content updated')
   } else {
     const newHtmlUpdate = new HtmlUpdateModel({ content })
     await newHtmlUpdate.save()
-    console.log('Created')
+    console.log('HTML content created')
   }
 }
