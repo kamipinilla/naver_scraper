@@ -2,7 +2,7 @@ import { HtmlUpdate, RestError } from '../../../server/types'
 import { apiPath } from './config'
 import { get } from './rest'
 
-const entryName = 'hello'
+const entryName = 'htmlContent'
 
 export async function getHtmlContent(): Promise<string> {
   const response = await get(`${apiPath}/${entryName}`)
