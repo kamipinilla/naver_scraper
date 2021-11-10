@@ -1,13 +1,13 @@
 import express from 'express'
 import { HtmlUpdate } from '../../server/types'
-import { setHtmlContent } from '../db/htmlUpdates'
+import { setHtmlContent } from '../db/htmlContent'
 const router = express.Router()
 
-router.post('/', async (req, res) => {
+router.put('/', async (req, res) => {
   const htmlUpdate: HtmlUpdate = req.body
-  console.log('update received')
+  console.log('HTML update received')
   await setHtmlContent(htmlUpdate.content)
-  res.send('update completed')
+  res.send('HTML update completed')
 })
 
 

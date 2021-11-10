@@ -27,13 +27,13 @@ app.listen(port)
 console.log(`Listening on ${port}`)
 
 async function startMongo() {
-    const uri = process.env.DATABASE_URL
-    if (!uri) {
-      throw Error('No env variable found for mongo uri')
-    }
-    
-    await mongoose.connect(uri);
-    console.log('Connected to Mongo')
+  const uri = process.env.DATABASE_URL
+  if (!uri) {
+    throw Error('No env variable found for mongo uri')
   }
   
-  startMongo().catch(console.error)
+  await mongoose.connect(uri);
+  console.log('Connected to Mongo')
+}
+
+startMongo().catch(console.error)

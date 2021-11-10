@@ -1,8 +1,8 @@
 import express from 'express'
-import hello from './hello'
+import htmlContent from './htmlContent'
 
 const router = express.Router()
-router.use('/hello', hello)
+router.use('/htmlContent', htmlContent)
 
 router.all('*', (req, res) => {
   const errorMsg = 'Invalid API URL: ' + req.url

@@ -12,7 +12,6 @@ app.use('/api', api)
 
 app.get('*', (req, res) => {
     const errorMsg = 'Invalid API URL: ' + req.url
-    console.log(errorMsg)
     res.status(404).json({ err: errorMsg })
 })
 
@@ -20,7 +19,6 @@ const port = process.env.PORT || 5000
 app.listen(port)
 
 console.log(`Listening on ${port}`)
-
 
 async function startMongo() {
   const uri = process.env.DATABASE_URL
