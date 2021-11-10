@@ -1,5 +1,5 @@
 # cloze_naver
-Naver web scraper for Korean cloze-test generation.
+Naver web scraper for Korean cloze-test generation. Work in progess.
 
 ## License
 
