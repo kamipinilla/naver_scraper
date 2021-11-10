@@ -66,7 +66,7 @@ function onDataReady() {
   const htmlUpdate = {
     content: contentHtml
   }
-  postToMiddleServer(htmlUpdate, '/api/hello')
+  postToMiddleServer(htmlUpdate, '/api/htmlContent')
 }
 
 let checkDataInterval = setInterval(() => {

@@ -13,6 +13,6 @@ export async function getHtmlContent(): Promise<string> {
     return content
   } else {
     const restError = json as RestError
-    throw Error(restError.err)
+    throw Error(restError.message)
   }
 }
