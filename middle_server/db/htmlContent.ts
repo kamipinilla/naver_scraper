@@ -1,4 +1,4 @@
-import { HtmlUpdateSchema } from '../../server/db/htmlUpdates'
+import { HtmlUpdateSchema } from '../../server/db/htmlContent'
 import { HtmlUpdateDb } from '../../server/types'
 import { model, Model } from 'mongoose'
 

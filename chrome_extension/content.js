@@ -41,7 +41,7 @@ async function postToMiddleServer(obj, apiPath) {
   const fetchUrl = `${proxyServerUrl}/${middleServerUrl}/${apiPath}`
 
   await fetch(fetchUrl, {
-    method: 'POST',
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
     },
