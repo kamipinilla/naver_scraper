@@ -4,8 +4,9 @@ function closeTab(tabId) {
 
 chrome.runtime.onMessage.addListener((msg, sender) => {
   switch (msg) {
-    case 'closeTab':
+    case 'closeTab': {
       closeTab(sender.tab.id)
       break
+    }
   }
 })
