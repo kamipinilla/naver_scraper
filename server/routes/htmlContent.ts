@@ -1,5 +1,5 @@
 import express from 'express'
-import { getHtmlContent } from '../db/htmlContent'
+import { getHtmlContent } from '../remote_db/htmlContent'
 import { RestError } from '../types'
 const router = express.Router()
 
