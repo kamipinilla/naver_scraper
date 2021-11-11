@@ -1,9 +1,10 @@
+import { SentPair } from '../../server/types'
+
 export type Object = any
 
 export type twString = string
 
 export interface NaverExample {
-  targetSent: string
-  sourceSent: string
+  sentPair: SentPair
   origin: string
 }

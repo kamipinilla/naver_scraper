@@ -34,8 +34,10 @@ function rowToNaverExample(row: Element): NaverExample {
   const origin = extractOrigin(originSection)
 
   return {
-    targetSent,
-    sourceSent,
+    sentPair: {
+      sourceSent,
+      targetSent,
+    },
     origin,
   }
 }

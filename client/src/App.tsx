@@ -52,9 +52,9 @@ const App: React.FC = () => {
       {naverExamples && 
         <div className="flex flex-col space-y-6">
           {naverExamples.map(naverExample => (
-            <div key={naverExample.sourceSent} className="flex flex-col space-y-2">
-              <div>{naverExample.targetSent}</div>
-              <div>{naverExample.sourceSent}</div>
+            <div key={naverExample.sentPair.sourceSent} className="flex flex-col space-y-2">
+              <div>{naverExample.sentPair.targetSent}</div>
+              <div>{naverExample.sentPair.sourceSent}</div>
               <div>{naverExample.origin}</div>
             </div>
           ))}
