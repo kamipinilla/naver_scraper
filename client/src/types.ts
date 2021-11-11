@@ -1,6 +1,4 @@
-export interface Object {
-  [key: string]: unknown
-}
+export type Object = any
 
 export type twString = string
 
