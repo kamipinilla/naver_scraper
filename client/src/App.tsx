@@ -1,62 +1,8 @@
 import { useCallback, useEffect, useState } from "react"
 import { getHtmlContent } from "./api/htmlUpdates"
+import { extractNaverExamples, getNaverUrl } from './scraper'
 import { NaverExample } from "./types"
 import Input from "./widgets/Input"
-
-function extractTargetSent(targetSection: Element): string {
-  const targetSpan = targetSection.children[0]
-  const targetTextRaw = (targetSpan as HTMLElement).innerText
-  const targetText = targetTextRaw.trim()
-  return targetText
-}
-
-function extractSourceSent(sourceSection: Element): string {
-  const sourceP = sourceSection.children[0]
-  const sourceTextRaw = (sourceP as HTMLElement).innerText
-  const sourceSent = sourceTextRaw.trim()
-  return sourceSent
-}
-
-function extractOrigin(originSection: Element): string {
-  const originAnchor = originSection as HTMLElement
-  const originRaw = originAnchor.innerText
-  const origin = originRaw.trim()
-  return origin
-}
-
-function rowToNaverExample(row: Element): NaverExample {
-  const rowChildren = row.children
-
-  const sourceSection = rowChildren[0]
-  const sourceSent = extractSourceSent(sourceSection)
-  
-  const targetSection = rowChildren[1]
-  const targetSent = extractTargetSent(targetSection)
-
-  const originSection = rowChildren[2]
-  const origin = extractOrigin(originSection)
-
-  return {
-    targetSent,
-    sourceSent,
-    origin,
-  }
-}
-
-function extractNaverExamples(content: string): NaverExample[] {
-  const root = new DOMParser().parseFromString(content, 'text/html')
-  const n1 = root.getElementById('searchPage_example')
-  const n2 = n1!.children[2]
-  const rows = n2.children
-  const naverExamples: NaverExample[] = []
-  for (let i = 0; i < rows.length - 1; i++) {
-    const row = rows[i]
-    const naverExample = rowToNaverExample(row)
-    naverExamples.push(naverExample)
-  }
-
-  return naverExamples
-}
 
 const App: React.FC = () => {
   const [naverExamples, setNaverExamples] = useState<NaverExample[] | null>(null)
@@ -89,7 +35,8 @@ const App: React.FC = () => {
     if (searchWord) {
       setIsFetching(true)
       const page = 1
-      window.open(`https://en.dict.naver.com/#/search?range=example&page=${page}&query=${searchWord}&shouldSearchVlive=false&haveTrans=exist:1`)
+      const naverUrl = getNaverUrl(searchWord, page)
+      window.open(naverUrl)
     }
   }, [searchWord])
 
