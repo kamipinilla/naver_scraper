@@ -52,10 +52,6 @@ async function postToMiddleServer(obj, apiPath) {
     const json = await response.json()
     const restError = json
     throw Error(restError.message)
-  } else {
-    const json = await response.json()
-    const successObj = json
-    console.log(successObj.message)
   }
 
   closeTab()

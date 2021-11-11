@@ -7,10 +7,7 @@ router.put('/', async (req, res) => {
   const htmlUpdate: HtmlUpdate = req.body
   console.log('HTML update received')
   await setHtmlContent(htmlUpdate.content)
-  const success: RestSuccess = {
-    message: 'HTML update completed',
-  }
-  res.json(success)
+  res.json({ message: 'HTML update completed' } as RestSuccess)
 })
 
 
