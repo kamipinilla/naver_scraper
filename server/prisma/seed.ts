@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Word, PrismaPromise } from '@prisma/client'
 import { LineReader } from '../files'
 
 const prisma = new PrismaClient()
@@ -22,22 +22,19 @@ async function loadWords() {
   }
 
   const words = await readWordsFromFile()
-  const progessCheckpoint = 2500
-  console.log('Loading words...')
+  const createPromises: PrismaPromise<any>[] = []
   for (const [index, word] of words.entries()) {
     const id = index + 1
-    await prisma.word.create({
+    const createPromise = prisma.word.create({
       data: {
         id,
         name: word,
       }
     })
-
-    if (index % progessCheckpoint === 0) {
-      const progress = Math.floor((index * 100) / words.length)
-      console.log(`${progress}%`)
-    }
+    createPromises.push(createPromise)
   }
+  console.log('Loading words...')
+  await prisma.$transaction(createPromises)
 }
 
 async function readWordsFromFile(): Promise<string[]> {
