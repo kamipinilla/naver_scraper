@@ -14,7 +14,7 @@ model Word {
   id Int @id
   name String @unique
 
-  selectedSentPairs SentPair[]
+  sentPairs SentPair[]
 }
 
 model SentPair {
