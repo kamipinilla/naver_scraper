@@ -1,6 +1,6 @@
 import { model, Model } from 'mongoose'
-import { HtmlUpdateSchema } from '../schemas'
-import { HtmlUpdateDb } from '../types'
+import { HtmlUpdateSchema } from './schemas'
+import { HtmlUpdateDb } from './types'
 
 const HtmlUpdateModel: Model<HtmlUpdateDb> = model('HtmlUpdate', HtmlUpdateSchema)
 

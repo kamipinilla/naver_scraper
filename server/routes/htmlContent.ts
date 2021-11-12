@@ -1,6 +1,6 @@
 import express from 'express'
-import { getHtmlContent } from '../remote_db/htmlContent'
-import { RestError } from '../types'
+import { getHtmlContent } from '../middle_db/htmlContent'
+import { RestError } from './types'
 const router = express.Router()
 
 router.get('/', async (req, res) => {

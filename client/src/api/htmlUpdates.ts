@@ -1,4 +1,5 @@
-import { HtmlUpdate, RestError } from '../../../server/types'
+import { HtmlUpdate } from '../../../server/types'
+import { RestError } from '../../../server/routes/types'
 import { apiPath } from './config'
 import { get } from './rest'
 
