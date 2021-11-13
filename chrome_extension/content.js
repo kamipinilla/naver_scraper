@@ -17,8 +17,7 @@ async function postToMiddleServer(obj, apiPath) {
   })
 
   if (!response.ok) {
-    const json = await response.json()
-    const restError = json
+    const restError = await response.json()
     throw Error(restError.message)
   }
 }
