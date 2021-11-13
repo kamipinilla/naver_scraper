@@ -1,26 +1,18 @@
-import { useState } from 'react'
-
-const Pill: React.FC = props => {
-  const {
-    children
-  } = props
-
-  return (
-    <div className="w-full inline-block rounded-full text-white bg-blue-500 px-2 py-1 text-xs font-bold">
-      {children}
-    </div>
-  )
-}
+import { useCallback, useEffect, useState } from 'react'
+import { Key } from '../types'
+import Input from './Input'
+import Pill from './Pill'
 
 interface Props {
   onSubmit: (value: string) => void
-  
-  onCancel?: () => void
+  onCancel: () => void
+
+  initialValue?: string
+  onValueChangeInfo?: (value: string | null) => void
   showHowTo?: boolean
   errorMessage?: string
   autofocus?: boolean
-  clearAfterSubmit?: boolean
-  onTypingResumed?: () => void
+  placeholder?: string
 }
 
 const SubmitInput: React.FC<Props> = props => {
@@ -28,43 +20,36 @@ const SubmitInput: React.FC<Props> = props => {
     onSubmit,
     onCancel,
 
+    onValueChangeInfo,
     errorMessage,
     autofocus,
-    onTypingResumed,
+    placeholder,
   } = props
 
   const showHowTo = props.showHowTo ?? false
-  const clearAfterSubmit = props.clearAfterSubmit ?? false
 
-  const [value, setValue] = useState<string | null>(null)
+  const [initialValue] = useState<string | null>(props.initialValue ?? null)
+  const [value, setValue] = useState<string | null>(initialValue)
 
-  function handleValueChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const receivedValue = event.target.value
-    const newValue = receivedValue !== '' ? receivedValue : null
-    setValue(newValue)
-
-    if (errorMessage && onTypingResumed) {
-      onTypingResumed()
+  useEffect(function notifyValueChangeInfo() {
+    if (onValueChangeInfo) {
+      onValueChangeInfo(value)
     }
-  }
+  }, [value, onValueChangeInfo])
 
-  function handleEnterPressed() {
-    if (value) {
+  const handleEnterPressed = useCallback(() => {
+    if (value && !errorMessage) {
       onSubmit(value)
-      if (clearAfterSubmit) {
-        setValue(null)
-      }
+      setValue(null)
     }
-  }
+  }, [value, errorMessage, onSubmit])
 
-  function handleEscapePressed() {
-    if (onCancel) {
-      onCancel()
-    }
-  }
+  const handleEscapePressed = useCallback(() => {
+    onCancel()
+  }, [onCancel])
 
-  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    const key = event.key
+  const handleKeyDown = useCallback((inputKey: string) => {
+    const key = inputKey as Key
     switch (key) {
       case 'Enter':
         handleEnterPressed()
@@ -73,23 +58,23 @@ const SubmitInput: React.FC<Props> = props => {
         handleEscapePressed()
         break
     }
-  }
+  }, [handleEnterPressed, handleEscapePressed])
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
+      <Input
+        value={value}
+        onChange={setValue}
+        onKeyDown={handleKeyDown}
+        placeholder={placeholder}
+        autofocus={autofocus} />
       {showHowTo &&
         <div className="flex space-x-1">
           <div>Press</div>
-          <Pill>{value ? 'Enter' : 'Escape'}</Pill>
-          <div>to {value ? 'submit' : 'exit'}</div>
+          <Pill>{value !== initialValue ? 'Enter' : 'Escape'}</Pill>
+          <div>to {value !== initialValue ? 'submit' : 'exit'}</div>
         </div>
       }
-      <input
-        value={value ?? ''}
-        onChange={handleValueChange}
-        onKeyDown={handleKeyDown}
-        autoFocus={autofocus}
-        className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:border-blue-500 focus:outline-none focus:ring" />
       {errorMessage && 
         <div className="text-red-600">{errorMessage}</div>
       }

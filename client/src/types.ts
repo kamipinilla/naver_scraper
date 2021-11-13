@@ -1,7 +1,3 @@
-export type Object = any
-
-export type twString = string
-
 export interface NaverExample {
   sentPair: {
     targetSent: string
@@ -9,3 +5,9 @@ export interface NaverExample {
   }
   origin: string
 }
+
+export type Object = any
+
+export type twString = string
+
+export type Key = 'Escape' | 'Enter'
