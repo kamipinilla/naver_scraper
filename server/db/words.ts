@@ -5,6 +5,15 @@ import { CreateSentPair } from './types'
 
 const prisma = new PrismaClient()
 
+export async function wordExists(wordId: number): Promise<boolean> {
+  const word = await prisma.word.findUnique({
+    where: {
+      id: wordId,
+    }
+  })
+  return word !== null
+}
+
 export async function getSentPairs(wordId: WordId): Promise<SentPair[] | null> {
   const word = await prisma.word.findUnique({
     where: {

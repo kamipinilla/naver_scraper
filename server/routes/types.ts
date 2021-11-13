@@ -5,3 +5,7 @@ export interface RestError {
 export interface RestSuccess {
   message: string
 }
+
+export interface RestItems {
+  items: any[]
+}
