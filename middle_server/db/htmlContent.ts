@@ -1,5 +1,5 @@
-import { HtmlUpdateSchema } from '../../server/schemas'
-import { HtmlUpdateDb } from '../../server/types'
+import { HtmlUpdateSchema } from '../../server/middle_db/schemas'
+import { HtmlUpdateDb } from '../../server/middle_db/types'
 import { model, Model } from 'mongoose'
 
 const HtmlUpdateModel: Model<HtmlUpdateDb> = model('HtmlUpdate', HtmlUpdateSchema)

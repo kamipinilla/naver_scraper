@@ -1,5 +1,6 @@
 import express from 'express'
-import { HtmlUpdate, RestSuccess } from '../../server/types'
+import { HtmlUpdate } from '../../server/types'
+import { RestSuccess } from '../../server/routes/types'
 import { setHtmlContent } from '../db/htmlContent'
 const router = express.Router()
 
