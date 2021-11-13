@@ -1,9 +1,15 @@
 import { PrismaClient } from '.prisma/client'
-import { SentPair, WordId } from '../types'
-import { toSentPair } from './transformType'
+import { SentPair, Word, WordId } from '../types'
+import { toSentPair, toWord } from './transformType'
 import { CreateSentPair } from './types'
 
 const prisma = new PrismaClient()
+
+export async function getAllWords(): Promise<Word[]> {
+  const dbWords = await prisma.word.findMany()
+  const words = dbWords.map(toWord)
+  return words
+}
 
 export async function wordExists(wordId: number): Promise<boolean> {
   const word = await prisma.word.findUnique({

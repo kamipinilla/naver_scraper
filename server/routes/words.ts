@@ -1,9 +1,14 @@
 import express from 'express'
 import { CreateSentPair } from '../db/types'
-import { getSentPairs, setSentPairs, wordExists } from '../db/words'
+import { getAllWords, getSentPairs, setSentPairs, wordExists } from '../db/words'
 import { RestError, RestItems, RestSuccess } from './types'
 
 const router = express.Router()
+
+router.get('/', async (req, res) => {
+  const words = await getAllWords()
+  res.json({ items: words } as RestItems)
+})
 
 router.get('/:wordId/sentPairs', async (req, res) => {
   const wordId = parseInt(req.params.wordId)
