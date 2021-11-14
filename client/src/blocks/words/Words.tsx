@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Word } from '../../../../server/types'
 import { getWords } from '../../api/words'
 import useKeyPressListener from '../../hooks/useKeyPressListener'
@@ -45,7 +46,7 @@ const Words: React.FC = () => {
     }
   }, [position, words])
 
-  const goToWordId = useCallback((): void => {
+  const jumpToWordId = useCallback((): void => {
     if (words === null) {
       return
     }
@@ -70,6 +71,15 @@ const Words: React.FC = () => {
     setPosition(wordIndex)
   }, [words])
 
+  const navigate = useNavigate()
+  const location = useLocation()
+  const navigateToWord = useCallback((): void => {
+    if (words !== null && position !== null) {
+      const wordId = words[position].id
+      navigate(`${location.pathname}/${wordId}`)
+    }
+  }, [words, position, location, navigate])
+
   const handleKeyPress = useCallback((key: Key): void => {
     switch (key) {
       case 'ArrowLeft': {
@@ -80,12 +90,16 @@ const Words: React.FC = () => {
         decrementPosition()
         break
       }
+      case 'Enter': {
+        navigateToWord()
+        break
+      }
       case 'g': {
-        goToWordId()
+        jumpToWordId()
         break
       }
     }
-  }, [incrementPosition, decrementPosition, goToWordId])
+  }, [incrementPosition, decrementPosition, jumpToWordId, navigateToWord])
 
   useKeyPressListener(handleKeyPress)
 
