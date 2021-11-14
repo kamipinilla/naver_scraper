@@ -21,6 +21,7 @@ model SentPair {
   id Int @id @default(autoincrement())
   targetSent String
   sourceSent String
+  @@unique([targetSent, sourceSent])
 
   wordId Int
   word Word @relation(fields: [wordId], references: [id])

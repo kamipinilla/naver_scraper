@@ -104,7 +104,7 @@ const Words: React.FC = () => {
   useKeyPressListener(handleKeyPress)
 
   if (!word) {
-    return <div>Loading...</div>
+    return null
   }
 
   return (
