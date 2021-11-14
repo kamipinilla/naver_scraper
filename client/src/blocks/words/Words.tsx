@@ -4,16 +4,34 @@ import { getWords } from '../../api/words'
 import useKeyPressListener from '../../hooks/useKeyPressListener'
 import { Key } from '../../types'
 
+const cachedPositionKey = 'position'
+
 const Words: React.FC = () => {
   const [position, setPosition] = useState<number | null>(null)
   const [words, setWords] = useState<Word[] | null>(null)
   useEffect(function loadWords() {
-    getWords().then(words => {
-      setWords(words)
-      setPosition(0)
-    })
+    getWords().then(setWords)
   }, [])
   const word = (words !== null && position !== null) ? words[position] : null
+
+  useEffect(function setInitialPosition() {
+    if (words !== null) {
+      const cachedPositionStr = localStorage.getItem(cachedPositionKey)
+      if (cachedPositionStr !== null) {
+        const cachedPosition = parseInt(cachedPositionStr)
+        setPosition(cachedPosition)
+      } else {
+        setPosition(0)
+      }
+    }
+  }, [words])
+
+  useEffect(function cachePosition() {
+    if (position !== null) {
+      const positionStr = position.toString()
+      localStorage.setItem(cachedPositionKey, positionStr)
+    }
+  }, [position])
 
   const incrementPosition = useCallback((): void => {
       if (position !== null && position !== 0) {
