@@ -10,4 +10,9 @@ export type Object = any
 
 export type twString = string
 
-export type Key = 'Escape' | 'Enter'
+export type Key =
+  'Escape'
+  | 'Enter'
+  | 'ArrowLeft'
+  | 'ArrowRight'
+  | 'g'

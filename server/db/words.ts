@@ -5,7 +5,7 @@ import { CreateSentPair } from './types'
 
 const prisma = new PrismaClient()
 
-export async function getAllWords(): Promise<Word[]> {
+export async function getWords(): Promise<Word[]> {
   const dbWords = await prisma.word.findMany()
   const words = dbWords.map(toWord)
   return words

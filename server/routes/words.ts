@@ -1,12 +1,12 @@
 import express from 'express'
 import { CreateSentPair } from '../db/types'
-import { getAllWords, getSentPairs, setSentPairs, wordExists } from '../db/words'
+import { getWords, getSentPairs, setSentPairs, wordExists } from '../db/words'
 import { RestError, RestItems, RestSuccess } from './types'
 
 const router = express.Router()
 
 router.get('/', async (req, res) => {
-  const words = await getAllWords()
+  const words = await getWords()
   res.json({ items: words } as RestItems)
 })
 

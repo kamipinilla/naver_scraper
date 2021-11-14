@@ -6,7 +6,7 @@ import { get, put } from './rest'
 
 const entryName = 'words'
 
-export async function getAllWords(): Promise<Word[]> {
+export async function getWords(): Promise<Word[]> {
   const response = await get(`${apiPath}/${entryName}`)
   const json = await response.json()
   if (response.ok) {

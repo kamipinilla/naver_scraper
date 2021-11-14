@@ -16,11 +16,6 @@ app.use(express.static(buildPath))
 app.use(express.json())
 app.use('/api', api)
 
-app.get('*', (req, res) => {
-    console.log('Invalid url: ' + req.url)
-    res.sendFile(path.join(buildPath, 'index.html'))
-})
-
 const port = process.env.PORT || 5000
 app.listen(port)
 
