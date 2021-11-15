@@ -6,7 +6,7 @@ import sentPairs from './sentPairs'
 const router = express.Router()
 router.use('/htmlContent', htmlContent)
 router.use('/words', words)
-router.use('sentPairs', sentPairs)
+router.use('/sentPairs', sentPairs)
 
 
 router.all('*', (req, res) => {

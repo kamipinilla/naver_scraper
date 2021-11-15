@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { NewSentPair } from '../../../../server/db/types'
-import { SentPair, Word, WordId } from '../../../../server/types'
+import { SentPair, SentPairId, Word, WordId } from '../../../../server/types'
 import { getHtmlContent } from '../../api/htmlUpdates'
+import { deleteSentPair } from '../../api/sentPairs'
 import { addSentPair, getSentPairs, getWord } from '../../api/words'
 import useNumberParam from '../../hooks/useNumberParam'
 import { extractNaverExamples, getNaverUrl } from '../../scraper'
@@ -103,6 +104,10 @@ const WordComponent: React.FC = () => {
     addSentPair(wordId, newSentPair).then(fetchSelectedSentPairs)
   }, [wordId, fetchSelectedSentPairs, selectedSentPairs])
 
+  const removeSentPair = useCallback((sentPairId: SentPairId): void => {
+    deleteSentPair(sentPairId).then(fetchSelectedSentPairs)
+  }, [fetchSelectedSentPairs])
+
   if (word === null || selectedSentPairs === null) {
     return null
   }
@@ -119,7 +124,7 @@ const WordComponent: React.FC = () => {
         <div className="flex-col space-y-3">
           {selectedSentPairs.map(sentPair => {
             return (
-              <ul key={sentPair.id}>
+              <ul key={sentPair.id} onClick={() => removeSentPair(sentPair.id)} className="bg-yellow-200 cursor-pointer p-2">
                 <li>{sentPair.targetSent}</li>
                 <li>{sentPair.sourceSent}</li>
               </ul>
@@ -132,7 +137,7 @@ const WordComponent: React.FC = () => {
         <div className="flex-col space-y-3">
           {naverExamples !== null && naverExamples.map(naverExample => {
             return (
-              <ul key={getNaverExampleKey(naverExample)} onClick={() => addNaverExampleToSelected(naverExample)} className="bg-green-200 cursor-pointer">
+              <ul key={getNaverExampleKey(naverExample)} onClick={() => addNaverExampleToSelected(naverExample)} className="bg-green-200 cursor-pointer p-2">
                 <li>{naverExample.sentPair.targetSent}</li>
                 <li>{naverExample.sentPair.sourceSent}</li>
                 <li>{shortenOrigin(naverExample.origin)}</li>
