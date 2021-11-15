@@ -4,6 +4,7 @@ import { Word } from '../../../../server/types'
 import { getWords } from '../../api/words'
 import useKeyPressListener from '../../hooks/useKeyPressListener'
 import { Key } from '../../types'
+import { join } from 'path'
 
 const cachedPositionKey = 'position'
 
@@ -76,7 +77,7 @@ const Words: React.FC = () => {
   const navigateToWord = useCallback((): void => {
     if (words !== null && position !== null) {
       const wordId = words[position].id
-      navigate(`${location.pathname}/${wordId}`)
+      navigate(join(location.pathname, wordId.toString()))
     }
   }, [words, position, location, navigate])
 
@@ -108,7 +109,7 @@ const Words: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="flex-col space-y-2 text-4xl">
       <div>{word.id}</div>
       <div>{word.name}</div>
     </div>
