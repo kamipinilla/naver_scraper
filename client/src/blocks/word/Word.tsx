@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { NewSentPair } from '../../../../server/db/types'
 import { SentPair, Word, WordId } from '../../../../server/types'
 import { getHtmlContent } from '../../api/htmlUpdates'
-import { getSentPairs, getWord } from '../../api/words'
+import { addSentPair, getSentPairs, getWord } from '../../api/words'
 import useNumberParam from '../../hooks/useNumberParam'
 import { extractNaverExamples, getNaverUrl } from '../../scraper'
 import { NaverExample } from '../../types'
@@ -32,10 +33,10 @@ const WordComponent: React.FC = () => {
   }, [wordId])
 
   const [selectedSentPairs, setSelectedSentPairs] = useState<SentPair[] | null>(null)
-  const loadSelectedSentPairs = useCallback((): void => {
+  const fetchSelectedSentPairs = useCallback((): void => {
     getSentPairs(wordId).then(setSelectedSentPairs)
   }, [wordId])
-  useEffect(loadSelectedSentPairs, [loadSelectedSentPairs])
+  useEffect(fetchSelectedSentPairs, [fetchSelectedSentPairs])
 
   const [naverExamples, setNaverExamples] = useState<NaverExample[] | null>(null)
   const [page, setPage] = useState<number | null>(null)
@@ -79,6 +80,29 @@ const WordComponent: React.FC = () => {
     }
   }, [onVisibilityChange])
 
+  const addNaverExampleToSelected = useCallback((naverExample: NaverExample): void => {
+    if (!selectedSentPairs) {
+      throw Error("Can't add naver example without loaded selected sent pairs")
+    }
+
+    const naverTargetSent = naverExample.sentPair.targetSent
+    const naverSourceSent = naverExample.sentPair.sourceSent
+    const alreadySelected = selectedSentPairs.some(sentPair => {
+      return sentPair.targetSent === naverTargetSent && sentPair.sourceSent === naverSourceSent
+    })
+
+    if (alreadySelected) {
+      alert('Already selected')
+      return
+    }
+    const newSentPair: NewSentPair = {
+      targetSent: naverTargetSent,
+      sourceSent: naverSourceSent,
+    }
+
+    addSentPair(wordId, newSentPair).then(fetchSelectedSentPairs)
+  }, [wordId, fetchSelectedSentPairs, selectedSentPairs])
+
   if (word === null || selectedSentPairs === null) {
     return null
   }
@@ -108,7 +132,7 @@ const WordComponent: React.FC = () => {
         <div className="flex-col space-y-3">
           {naverExamples !== null && naverExamples.map(naverExample => {
             return (
-              <ul key={getNaverExampleKey(naverExample)}>
+              <ul key={getNaverExampleKey(naverExample)} onClick={() => addNaverExampleToSelected(naverExample)} className="bg-green-200 cursor-pointer">
                 <li>{naverExample.sentPair.targetSent}</li>
                 <li>{naverExample.sentPair.sourceSent}</li>
                 <li>{shortenOrigin(naverExample.origin)}</li>
