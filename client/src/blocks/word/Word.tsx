@@ -1,18 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { NewSentPair } from '../../../../server/db/types'
-import { SentPair, SentPairId, Word, WordId } from '../../../../server/types'
+import { SentPair, Word, WordId } from '../../../../server/types'
 import { getHtmlContent } from '../../api/htmlUpdates'
 import { deleteSentPair } from '../../api/sentPairs'
 import { addSentPair, getSentPairs, getWord } from '../../api/words'
+import useKeyPressListener from '../../hooks/useKeyPressListener'
 import useNumberParam from '../../hooks/useNumberParam'
 import { extractNaverExamples, getNaverUrl } from '../../scraper'
-import { NaverExample } from '../../types'
-import Button from '../../widgets/Button'
+import { Key, NaverExample } from '../../types'
 import H from '../../widgets/H'
-
-function getNaverExampleKey(naverExample: NaverExample): string {
-  return naverExample.sentPair.targetSent + "/" + naverExample.sentPair.sourceSent
-}
 
 function shortenOrigin(origin: string): string {
   switch (origin) {
@@ -42,6 +38,7 @@ const WordComponent: React.FC = () => {
   const [naverExamples, setNaverExamples] = useState<NaverExample[] | null>(null)
   const [page, setPage] = useState<number | null>(null)
   const [isScraping, setIsScraping] = useState<boolean>(false)
+  const [position, setPosition] = useState<number | null>(null)
 
   const fetchNaverExamples = useCallback(() => {
     getHtmlContent().then(content => {
@@ -49,13 +46,15 @@ const WordComponent: React.FC = () => {
       if (naverExamples === null) {
         setNaverExamples(fetchedNaverExamples)
         setPage(1)
+        setPosition(0)
       } else {
         const totalNaverExamples = naverExamples.concat(fetchedNaverExamples)
         setNaverExamples(totalNaverExamples)
         setPage(page! + 1)
+        setPosition(position! + 1)
       }
     })
-  }, [naverExamples, page])
+  }, [naverExamples, page, position])
 
   const scrapeNaver = useCallback((): void => {
     if (word !== null) {
@@ -96,27 +95,93 @@ const WordComponent: React.FC = () => {
     return alreadySelected
   }, [selectedSentPairs])
 
-  const addNaverExampleToSelected = useCallback((naverExample: NaverExample): void => {
-    if (naverExampleAlreadySelected(naverExample)) {
-      alert('Already selected')
-      return
-    }
+  const getNotSelectedNaverList = useCallback(() => {
+    return naverExamples !== null ? naverExamples.filter(naverExample => {
+      return !naverExampleAlreadySelected(naverExample)
+    }) : null
+  }, [naverExamples, naverExampleAlreadySelected])
+
+  const addCurrentExampleToSelected = useCallback((): void => {
+    const notSelectedNaverList = getNotSelectedNaverList()
+    if (notSelectedNaverList === null) throw Error()
+
+    const naverExample = notSelectedNaverList[position!]
+    const shouldDecreasePosition = position === notSelectedNaverList.length - 1
 
     const newSentPair: NewSentPair = {
       targetSent: naverExample.sentPair.targetSent,
       sourceSent: naverExample.sentPair.sourceSent,
     }
 
-    addSentPair(wordId, newSentPair).then(fetchSelectedSentPairs)
-  }, [wordId, fetchSelectedSentPairs, naverExampleAlreadySelected])
+    addSentPair(wordId, newSentPair).then(() => {
+      fetchSelectedSentPairs()
+      if (shouldDecreasePosition) {
+        setPosition(position - 1)
+      }
+    })
+  }, [wordId, fetchSelectedSentPairs, getNotSelectedNaverList, position])
 
-  const removeSentPair = useCallback((sentPairId: SentPairId): void => {
-    deleteSentPair(sentPairId).then(fetchSelectedSentPairs)
-  }, [fetchSelectedSentPairs])
+  const removeSentPair = useCallback((sentPair: SentPair): void => {
+    let shouldIncreasePosition = false
+    if (naverExamples !== null) {
+      const naverExamplesReAddPosition = naverExamples!.findIndex(naverExample =>
+        naverExample.sentPair.targetSent === sentPair.targetSent && naverExample.sentPair.sourceSent === sentPair.sourceSent
+      )
+      shouldIncreasePosition = naverExamplesReAddPosition <= position!
+    }
+    deleteSentPair(sentPair.id).then(() => {
+      fetchSelectedSentPairs()
+      if (shouldIncreasePosition) {
+        setPosition(position! + 1)
+      }
+    })
+  }, [fetchSelectedSentPairs, naverExamples, position])
+
+const decrementPosition = useCallback((): void => {
+  if (position !== null && position !== 0) {
+    setPosition(position - 1)
+  }
+}, [position])
+
+const incrementPosition = useCallback((): void => {
+  const notSelectedNaverList = getNotSelectedNaverList()
+  if (notSelectedNaverList !== null && position !== null) {
+    if (position !== notSelectedNaverList.length - 1) {
+      setPosition(position + 1)
+    } else {
+      scrapeNaver()
+    }
+  }
+}, [position, getNotSelectedNaverList, scrapeNaver])
+
+  const handleKeyPress = useCallback((key: Key): void => {
+    switch (key) {
+      case 'ArrowLeft': {
+        decrementPosition()
+        break
+      }
+      case 'ArrowRight': {
+        incrementPosition()
+        break
+      }
+      case 'Enter': {
+        if (naverExamples !== null) {
+          addCurrentExampleToSelected()
+        } else {
+          scrapeNaver()
+        }
+        break
+      }
+    }
+  }, [incrementPosition, decrementPosition, addCurrentExampleToSelected, scrapeNaver, naverExamples])
+
+  useKeyPressListener(handleKeyPress)
 
   if (word === null || selectedSentPairs === null) {
     return null
   }
+
+  const notSelectedNaver = getNotSelectedNaverList()
 
   return (
     <div className="flex-col space-y-10">
@@ -124,31 +189,23 @@ const WordComponent: React.FC = () => {
         <div>{word.id}</div>
         <div>{word.name}</div>
       </div>
-      <Button onClick={scrapeNaver}>Load Naver</Button>
+      {notSelectedNaver !== null && position !== null &&
+        <div className="h-32 flex-col">
+          <div className="flex-col space-y-3">
+            <div>{notSelectedNaver[position].sentPair.targetSent}</div>
+            <div>{notSelectedNaver[position].sentPair.sourceSent}</div>
+            <div>{shortenOrigin(notSelectedNaver[position].origin)}</div>
+          </div>
+        </div>
+      }
       <div className="flex-col space-y-3">
-        <H size="md">Selected</H>
+        {selectedSentPairs.length !== 0 && <H size="md">Selected</H>}
         <div className="flex-col space-y-3">
           {selectedSentPairs.map(sentPair => {
             return (
-              <ul key={sentPair.id} onClick={() => removeSentPair(sentPair.id)} className="bg-green-200 cursor-pointer p-2">
+              <ul key={sentPair.id} onClick={() => removeSentPair(sentPair)} className="bg-blue-200 cursor-pointer p-2">
                 <li>{sentPair.targetSent}</li>
                 <li>{sentPair.sourceSent}</li>
-              </ul>
-            )
-          })}
-        </div>
-      </div>
-      <div className="flex-col space-y-3">
-        <H size="md">Naver</H>
-        <div className="flex-col space-y-3">
-          {naverExamples !== null && naverExamples.map(naverExample => {
-            const alreadySelected = naverExampleAlreadySelected(naverExample)
-            if (alreadySelected) return null
-            return (
-              <ul key={getNaverExampleKey(naverExample)} onClick={() => addNaverExampleToSelected(naverExample)} className="bg-blue-200 cursor-pointer p-2">
-                <li>{naverExample.sentPair.targetSent}</li>
-                <li>{naverExample.sentPair.sourceSent}</li>
-                <li>{shortenOrigin(naverExample.origin)}</li>
               </ul>
             )
           })}
