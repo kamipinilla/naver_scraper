@@ -32,6 +32,9 @@ export async function updateSentPair(sentPairId: SentPairId, update: UpdateSentP
   if (update.targetSent !== undefined) {
     await setTargetSent(sentPairId, update.targetSent)
   }
+  if (update.sourceSent !== undefined) {
+    await setSourceSent(sentPairId, update.sourceSent)
+  }
 }
 
 async function setTargetSent(sentPairId: SentPairId, newTargetSent: string): Promise<void> {
@@ -90,6 +93,61 @@ async function setTargetSent(sentPairId: SentPairId, newTargetSent: string): Pro
   await prisma.$transaction(transaction)
 }
 
+async function setSourceSent(sentPairId: SentPairId, newSourceSent: string): Promise<void> {
+  if (!sentPairExists(sentPairId)) {
+    throw Error(sentPairNotFound(sentPairId))
+  }
+
+  if (newSourceSent === '') {
+    throw Error('Source sentence cannot be empty')
+  }
+
+  const sentPair = await getSentPair(sentPairId)
+  if (sentPair.sourceSent === newSourceSent) {
+    return
+  }
+
+  const transaction = []
+
+  if (sentPair.origSourceSent === null) {
+    const setOrigSourceSent = prisma.sentPair.update({
+      where: {
+        id: sentPairId,
+      },
+      data: {
+        origSourceSent: sentPair.sourceSent,
+      }
+    })
+
+    transaction.push(setOrigSourceSent)
+  } else {
+    if (newSourceSent === sentPair.origSourceSent) {
+      const clearOrigSourceSent = prisma.sentPair.update({
+        where: {
+          id: sentPairId,
+        },
+        data: {
+          origSourceSent: null,
+        }
+      })
+
+      transaction.push(clearOrigSourceSent)
+    }
+  }
+
+  const updateSourceSent = prisma.sentPair.update({
+    where: {
+      id: sentPairId,
+    },
+    data: {
+      sourceSent: newSourceSent,
+    }
+  })
+
+  transaction.push(updateSourceSent)
+
+  await prisma.$transaction(transaction)
+}
 export async function deleteSentPair(sentPairId: SentPairId): Promise<void> {
   if (!sentPairExists(sentPairId)) {
     throw Error(sentPairNotFound(sentPairId))

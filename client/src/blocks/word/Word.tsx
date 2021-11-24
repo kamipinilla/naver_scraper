@@ -22,6 +22,15 @@ function shortenOrigin(origin: string): string {
   }
 }
 
+function sentPairEqualsNaverExample(sentPair: SentPair, naverExample: NaverExample): boolean {
+  const naverTargetSent = naverExample.sentPair.targetSent
+  const naverSourceSent = naverExample.sentPair.sourceSent
+
+  const originalTargetSent = sentPair.origTargetSent ?? sentPair.targetSent
+  const originalSourceSent = sentPair.origSourceSent ?? sentPair.sourceSent
+  return originalTargetSent === naverTargetSent && originalSourceSent === naverSourceSent
+}
+
 const WordComponent: React.FC = () => {
   const wordId: WordId = useNumberParam('wordId')
   
@@ -82,16 +91,11 @@ const WordComponent: React.FC = () => {
   }, [onVisibilityChange])
 
   const naverExampleAlreadySelected = useCallback((naverExample: NaverExample): boolean => {
-    const naverTargetSent = naverExample.sentPair.targetSent
-    const naverSourceSent = naverExample.sentPair.sourceSent
-
     if (!selectedSentPairs) {
       throw Error("Can't add naver example without loaded selected sent pairs")
     }
 
-    const alreadySelected = selectedSentPairs.some(sentPair => {
-      return sentPair.targetSent === naverTargetSent && sentPair.sourceSent === naverSourceSent
-    })
+    const alreadySelected = selectedSentPairs.some(sentPair => sentPairEqualsNaverExample(sentPair, naverExample))
 
     return alreadySelected
   }, [selectedSentPairs])
@@ -125,9 +129,7 @@ const WordComponent: React.FC = () => {
   const handleRemoveSentPair = useCallback((sentPair: SentPair): void => {
     let shouldIncreasePosition = false
     if (naverExamples !== null) {
-      const naverExamplesReAddPosition = naverExamples!.findIndex(naverExample =>
-        naverExample.sentPair.targetSent === sentPair.targetSent && naverExample.sentPair.sourceSent === sentPair.sourceSent
-      )
+      const naverExamplesReAddPosition = naverExamples!.findIndex(naverExample => sentPairEqualsNaverExample(sentPair, naverExample))
       shouldIncreasePosition = naverExamplesReAddPosition <= position!
     }
     deleteSentPair(sentPair.id).then(() => {
