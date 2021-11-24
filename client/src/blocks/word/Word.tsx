@@ -9,6 +9,7 @@ import useNumberParam from '../../hooks/useNumberParam'
 import { extractNaverExamples, getNaverUrl } from '../../scraper'
 import { Key, NaverExample } from '../../types'
 import H from '../../widgets/H'
+import SelectedSentPair from './SelectedSentPair'
 
 function shortenOrigin(origin: string): string {
   switch (origin) {
@@ -121,7 +122,7 @@ const WordComponent: React.FC = () => {
     })
   }, [wordId, fetchSelectedSentPairs, getNotSelectedNaverList, position])
 
-  const removeSentPair = useCallback((sentPair: SentPair): void => {
+  const handleRemoveSentPair = useCallback((sentPair: SentPair): void => {
     let shouldIncreasePosition = false
     if (naverExamples !== null) {
       const naverExamplesReAddPosition = naverExamples!.findIndex(naverExample =>
@@ -190,7 +191,7 @@ const incrementPosition = useCallback((): void => {
         <div>{word.name}</div>
       </div>
       {notSelectedNaver !== null && position !== null &&
-        <div className="h-32 flex-col">
+        <div className="h-32 flex-col bg-gray-100 p-5 rounded-md">
           <div className="flex-col space-y-3">
             <div>{notSelectedNaver[position].sentPair.targetSent}</div>
             <div>{notSelectedNaver[position].sentPair.sourceSent}</div>
@@ -198,19 +199,21 @@ const incrementPosition = useCallback((): void => {
           </div>
         </div>
       }
-      <div className="flex-col space-y-3">
-        {selectedSentPairs.length !== 0 && <H size="md">Selected</H>}
+      {selectedSentPairs.length !== 0 &&
         <div className="flex-col space-y-3">
-          {selectedSentPairs.map(sentPair => {
-            return (
-              <ul key={sentPair.id} onClick={() => removeSentPair(sentPair)} className="bg-blue-200 cursor-pointer p-2">
-                <li>{sentPair.targetSent}</li>
-                <li>{sentPair.sourceSent}</li>
-              </ul>
-            )
-          })}
+          <H size="md">Selected</H>
+          <div className="flex-col space-y-3">
+            {selectedSentPairs.map(sentPair => {
+              return (
+                <SelectedSentPair
+                  sentPair={sentPair}
+                  onRemoveSentPair={handleRemoveSentPair}
+                  onSentPairUpdated={fetchSelectedSentPairs} />
+              )
+            })}
+          </div>
         </div>
-      </div>
+      }
     </div>
   )
 }

@@ -13,5 +13,8 @@ export function toSentPair(dbSentPair: DbSentPair): SentPair {
     id: dbSentPair.id,
     targetSent: dbSentPair.targetSent,
     sourceSent: dbSentPair.sourceSent,
+
+    origTargetSent: dbSentPair.origTargetSent,
+    origSourceSent: dbSentPair.origSourceSent,
   }
 }

@@ -7,6 +7,9 @@ export interface SentPair {
   id: SentPairId
   targetSent: string
   sourceSent: string
+
+  origTargetSent: string | null
+  origSourceSent: string | null
 }
 
 export type WordId = number

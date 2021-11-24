@@ -18,6 +18,7 @@ main()
 async function loadWords() {
   const wordCount = await prisma.word.count()
   if (wordCount) {
+    console.log('Words already populated')
     return
   }
 

@@ -22,6 +22,8 @@ model SentPair {
   targetSent String
   sourceSent String
   @@unique([targetSent, sourceSent])
+  origTargetSent String?
+  origSourceSent String?
 
   wordId Int
   word Word @relation(fields: [wordId], references: [id])
