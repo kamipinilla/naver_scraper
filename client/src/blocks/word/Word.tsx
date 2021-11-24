@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { NewSentPair } from '../../../../server/db/types'
 import { SentPair, Word, WordId } from '../../../../server/types'
 import { getHtmlContent } from '../../api/htmlUpdates'
@@ -12,14 +13,14 @@ import H from '../../widgets/H'
 import SelectedSentPair from './SelectedSentPair'
 
 function shortenOrigin(origin: string): string {
-  switch (origin) {
-    case "Oxford Advanced Learner's English-Korean Dictionary": {
-      return 'Oxford'
-    }
-    default: {
-      return origin
-    }
+  if (origin === "Oxford Advanced Learner's English-Korean Dictionary") {
+    return 'Oxford Dictionary'
   }
+  if (origin.includes('User translation')) {
+    return 'User Translation'
+  }
+
+  return origin
 }
 
 function sentPairEqualsNaverExample(sentPair: SentPair, naverExample: NaverExample): boolean {
@@ -33,6 +34,7 @@ function sentPairEqualsNaverExample(sentPair: SentPair, naverExample: NaverExamp
 
 const WordComponent: React.FC = () => {
   const wordId: WordId = useNumberParam('wordId')
+  const navigate = useNavigate()
   
   const [word, setWord] = useState<Word | null>(null)
   useEffect(function loadWord() {
@@ -164,6 +166,10 @@ const incrementPosition = useCallback((): void => {
   }
 }, [position, getNotSelectedNaverList, scrapeNaver])
 
+const goToWords = useCallback((): void => {
+  navigate('/words')
+}, [navigate])
+
   const handleKeyPress = useCallback((key: Key): void => {
     switch (key) {
       case 'ArrowLeft': {
@@ -182,8 +188,11 @@ const incrementPosition = useCallback((): void => {
         }
         break
       }
+      case 'Escape': {
+        goToWords()
+      }
     }
-  }, [incrementPosition, decrementPosition, addCurrentExampleToSelected, scrapeNaver, naverExamples])
+  }, [incrementPosition, decrementPosition, addCurrentExampleToSelected, scrapeNaver, goToWords, naverExamples])
 
   useKeyPressListener(handleKeyPress)
 
@@ -200,8 +209,8 @@ const incrementPosition = useCallback((): void => {
         <div>{word.name}</div>
       </div>
       {notSelectedNaver !== null && position !== null &&
-        <div className="h-32 flex-col bg-gray-100 p-5 rounded-md">
-          <div className="flex-col space-y-3">
+        <div className="h-48 flex-col">
+          <div className="bg-gray-100 p-5 rounded-md flex-col space-y-3">
             <div>{notSelectedNaver[position].sentPair.targetSent}</div>
             <div>{notSelectedNaver[position].sentPair.sourceSent}</div>
             <div>{shortenOrigin(notSelectedNaver[position].origin)}</div>

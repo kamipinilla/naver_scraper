@@ -22,7 +22,7 @@ const EditSelectedSentPair: React.FC<Props> = props => {
   const [sourceSent, setSourceSent] = useState<string>(sentPair.sourceSent)
 
   const anyChange = useCallback((): boolean => {
-    return targetSent !== sentPair.targetSent || sourceSent !== sentPair.sourceSent
+    return targetSent.trim() !== sentPair.targetSent || sourceSent.trim() !== sentPair.sourceSent
   }, [targetSent, sourceSent, sentPair])
 
   const handleSubmit = useCallback(function (): void {

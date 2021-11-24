@@ -15,4 +15,6 @@ export type Key =
   | 'Enter'
   | 'ArrowLeft'
   | 'ArrowRight'
+  | 'Shift'
+  | 'Backspace'
   | 'g'

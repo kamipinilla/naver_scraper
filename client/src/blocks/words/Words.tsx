@@ -109,7 +109,7 @@ const Words: React.FC = () => {
   }
 
   return (
-    <div className="flex-col space-y-2 text-4xl">
+    <div className="flex-col text-center space-y-2 text-6xl pt-12 w-full">
       <div>{word.id}</div>
       <div>{word.name}</div>
     </div>
