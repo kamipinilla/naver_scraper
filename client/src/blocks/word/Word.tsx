@@ -45,10 +45,26 @@ const WordComponent: React.FC = () => {
   }, [wordId])
   useEffect(fetchSelectedSentPairs, [fetchSelectedSentPairs])
 
+
   const [naverExamples, setNaverExamples] = useState<NaverExample[] | null>(null)
   const [page, setPage] = useState<number | null>(null)
   const [isScraping, setIsScraping] = useState<boolean>(false)
   const [position, setPosition] = useState<number | null>(null)
+
+  const scrapeNaver = useCallback((): void => {
+    if (word !== null) {
+      setIsScraping(true)
+      const nextPage = page !== null ? (page + 1) : 1
+      const naverUrl = getNaverUrl(word.name, nextPage)
+      window.open(naverUrl)
+    }
+  }, [word, page])
+
+  useEffect(function checkIfScrapeAutomatically() {
+    if (selectedSentPairs !== null && selectedSentPairs.length === 0 && naverExamples === null) {
+      scrapeNaver()
+    }
+  }, [selectedSentPairs, naverExamples, scrapeNaver])
 
   const fetchNaverExamples = useCallback(() => {
     getHtmlContent().then(content => {
@@ -65,15 +81,6 @@ const WordComponent: React.FC = () => {
       }
     })
   }, [naverExamples, page, position])
-
-  const scrapeNaver = useCallback((): void => {
-    if (word !== null) {
-      setIsScraping(true)
-      const nextPage = page !== null ? (page + 1) : 1
-      const naverUrl = getNaverUrl(word.name, nextPage)
-      window.open(naverUrl)
-    }
-  }, [word, page])
 
   const onVisibilityChange = useCallback(() => {
     if (!document.hidden && isScraping) {
