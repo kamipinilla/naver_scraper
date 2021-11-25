@@ -24,8 +24,8 @@ function shortenOrigin(origin: string): string {
 }
 
 function sentPairEqualsNaverExample(sentPair: SentPair, naverExample: NaverExample): boolean {
-  const naverTargetSent = naverExample.sentPair.targetSent
-  const naverSourceSent = naverExample.sentPair.sourceSent
+  const naverTargetSent = naverExample.targetSent
+  const naverSourceSent = naverExample.sourceSent
 
   const originalTargetSent = sentPair.origTargetSent ?? sentPair.targetSent
   const originalSourceSent = sentPair.origSourceSent ?? sentPair.sourceSent
@@ -123,8 +123,8 @@ const WordComponent: React.FC = () => {
     const shouldDecreasePosition = position === notSelectedNaverList.length - 1
 
     const newSentPair: NewSentPair = {
-      targetSent: naverExample.sentPair.targetSent,
-      sourceSent: naverExample.sentPair.sourceSent,
+      targetSent: naverExample.targetSent,
+      sourceSent: naverExample.sourceSent,
     }
 
     addSentPair(wordId, newSentPair).then(() => {
@@ -211,8 +211,8 @@ const goToWords = useCallback((): void => {
       {notSelectedNaver !== null && position !== null &&
         <div className="h-48 flex-col">
           <div className="bg-gray-100 p-5 rounded-md flex-col space-y-3">
-            <div>{notSelectedNaver[position].sentPair.targetSent}</div>
-            <div>{notSelectedNaver[position].sentPair.sourceSent}</div>
+            <div>{notSelectedNaver[position].targetSent}</div>
+            <div>{notSelectedNaver[position].sourceSent}</div>
             <div>{shortenOrigin(notSelectedNaver[position].origin)}</div>
           </div>
         </div>

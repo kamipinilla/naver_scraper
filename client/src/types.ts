@@ -1,8 +1,6 @@
 export interface NaverExample {
-  sentPair: {
-    targetSent: string
-    sourceSent: string
-  }
+  targetSent: string
+  sourceSent: string
   origin: string
 }
 
