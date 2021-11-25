@@ -22,6 +22,7 @@ model SentPair {
   targetSent String
   sourceSent String
   @@unique([targetSent, sourceSent])
+  
   origTargetSent String?
   origSourceSent String?
 
