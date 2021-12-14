@@ -3,9 +3,9 @@ Naver web scraper for Korean cloze-test generation.
 
 # How to run
 
-## Install chrome extension
+1. Install chrome extension
 
-## Run server
+2. Run server
 
 ```bash
 cd server
@@ -13,14 +13,13 @@ npm i
 npm start
 ```
 
-## Run client
+3. Run client
 
 ```bash
 cd client
 npm i
 npm start
 ```
-
 
 # License
 
