@@ -24,7 +24,7 @@ console.log(`Listening on port ${port}`)
 async function startMongo() {
   const uri = process.env.DATABASE_URL
   if (!uri) {
-    throw Error('No env variable DATABASE_URL found for middle server mongo uri')
+    throw Error('Env variable DATABASE_URL not found for middle server mongo uri')
   }
   
   await mongoose.connect(uri);
