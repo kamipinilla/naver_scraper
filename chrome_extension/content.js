@@ -3,7 +3,7 @@ async function postToMiddleServer(obj, apiPath) {
   const middleServerUrl = 'https://cloze-naver-middle.herokuapp.com'
   
   if (apiPath[0] === '/') {
-      apiPath = apiPath.slice(1)
+    apiPath = apiPath.slice(1)
   }
 
   const fetchUrl = `${proxyServerUrl}/${middleServerUrl}/${apiPath}`
