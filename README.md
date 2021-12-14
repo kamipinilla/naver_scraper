@@ -3,7 +3,7 @@ Naver web scraper for Korean cloze-test generation.
 
 # How to run
 
-1. Install chrome extension.
+1. Install chrome extension (chrome_extension folder).
 
 2. Run server:
 
