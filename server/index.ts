@@ -6,6 +6,7 @@ import mongoose from 'mongoose'
 
 env.config()
 
+
 const app = express()
 
 const clientFolder = '../client'
