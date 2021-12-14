@@ -19,5 +19,3 @@ npm-debug.log*
 
 files/
 .env
-
-main.db
