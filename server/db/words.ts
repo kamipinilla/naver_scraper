@@ -1,5 +1,5 @@
 import { PrismaClient } from '.prisma/client'
-import { SentPair, SentPairId, Word, WordId } from '../types'
+import { SentPair, Word, WordId } from '../types'
 import { toSentPair, toWord } from './transformType'
 import { NewSentPair } from './types'
 

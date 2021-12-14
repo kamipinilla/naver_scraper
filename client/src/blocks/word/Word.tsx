@@ -47,7 +47,6 @@ const WordComponent: React.FC = () => {
   }, [wordId])
   useEffect(fetchSelectedSentPairs, [fetchSelectedSentPairs])
 
-
   const [naverExamples, setNaverExamples] = useState<NaverExample[] | null>(null)
   const [page, setPage] = useState<number | null>(null)
   const [isScraping, setIsScraping] = useState<boolean>(false)

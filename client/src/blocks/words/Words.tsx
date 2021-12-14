@@ -74,6 +74,7 @@ const Words: React.FC = () => {
 
   const navigate = useNavigate()
   const location = useLocation()
+  
   const navigateToWord = useCallback((): void => {
     if (words !== null && position !== null) {
       const wordId = words[position].id
