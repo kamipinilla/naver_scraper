@@ -4,7 +4,7 @@ const Pill: React.FC = props => {
   } = props
 
   return (
-    <div className="inline-block rounded-full text-white bg-blue-500 px-2 py-1 text-xs font-bold">
+    <div className="inline-block rounded-full text-white bg-blue-500 px-2 py-1 font-bold">
       {children}
     </div>
   )

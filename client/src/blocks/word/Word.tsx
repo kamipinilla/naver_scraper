@@ -10,6 +10,7 @@ import useNumberParam from '../../hooks/useNumberParam'
 import { extractNaverExamples, getNaverUrl } from '../../scraper'
 import { Key, NaverExample } from '../../types'
 import H from '../../widgets/H'
+import Pill from '../../widgets/Pill'
 import SelectedSentPair from './SelectedSentPair'
 
 function shortenOrigin(origin: string): string {
@@ -224,7 +225,10 @@ const goToWords = useCallback((): void => {
       }
       {selectedSentPairs.length !== 0 &&
         <div className="flex-col space-y-3">
-          <H size="md">Selected</H>
+          <div className="flex space-x-2 items-center">
+            <H size="md">Selected</H>
+            <Pill>{selectedSentPairs.length}</Pill>
+          </div>
           <div className="flex-col space-y-3">
             {selectedSentPairs.map(sentPair => {
               return (
