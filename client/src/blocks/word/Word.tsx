@@ -52,6 +52,8 @@ const WordComponent: React.FC = () => {
   const [isScraping, setIsScraping] = useState<boolean>(false)
   const [position, setPosition] = useState<number | null>(null)
 
+  const [isEditing, setIsEditing] = useState<boolean>(false)
+
   const scrapeNaver = useCallback((): void => {
     if (word !== null) {
       setIsScraping(true)
@@ -170,6 +172,10 @@ const goToWords = useCallback((): void => {
 }, [navigate])
 
   const handleKeyPress = useCallback((key: Key): void => {
+    if (isEditing) {
+      return
+    }
+
     switch (key) {
       case 'ArrowLeft': {
         decrementPosition()
@@ -191,7 +197,7 @@ const goToWords = useCallback((): void => {
         goToWords()
       }
     }
-  }, [incrementPosition, decrementPosition, addCurrentExampleToSelected, scrapeNaver, goToWords, naverExamples])
+  }, [incrementPosition, decrementPosition, addCurrentExampleToSelected, scrapeNaver, goToWords, naverExamples, isEditing])
 
   useKeyPressListener(handleKeyPress)
 
@@ -225,6 +231,8 @@ const goToWords = useCallback((): void => {
                 <SelectedSentPair
                   key={sentPair.id}
                   sentPair={sentPair}
+                  isEditing={isEditing}
+                  onIsEditingChange={setIsEditing}
                   onRemoveSentPair={handleRemoveSentPair}
                   onSentPairUpdated={fetchSelectedSentPairs} />
               )
