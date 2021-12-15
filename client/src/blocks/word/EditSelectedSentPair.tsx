@@ -56,7 +56,8 @@ const EditSelectedSentPair: React.FC<Props> = props => {
     <div className="space-y-3">
       <Input
         value={targetSent}
-        onChange={handleTargetSentChange} />
+        onChange={handleTargetSentChange}
+        autofocus />
       <Input
         value={sourceSent}
         onChange={handleSourceSentChange} />
