@@ -30,7 +30,7 @@ const SelectedSentPair: React.FC<Props> = props => {
     display = (
       <div className="flex space-x-6">
         <div className="flex-col rounded-md flex-1 cursor-pointer hover:bg-blue-200 bg-blue-100 p-5 space-y-2" onClick={() => onRemoveSentPair(sentPair)}>
-          <div>{sentPair.targetSent}</div>
+          <div className="text-3xl">{sentPair.targetSent}</div>
           <div>{sentPair.sourceSent}</div>
         </div>
         <div className="flex items-center m-2">

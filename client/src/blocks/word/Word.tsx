@@ -210,7 +210,7 @@ const goToWords = useCallback((): void => {
       {notSelectedNaver !== null && position !== null &&
         <div className="h-48 flex-col">
           <div className="bg-gray-100 p-5 rounded-md flex-col space-y-3">
-            <div>{notSelectedNaver[position].targetSent}</div>
+            <div className="text-3xl">{notSelectedNaver[position].targetSent}</div>
             <div>{notSelectedNaver[position].sourceSent}</div>
             <div>{shortenOrigin(notSelectedNaver[position].origin)}</div>
           </div>
@@ -223,6 +223,7 @@ const goToWords = useCallback((): void => {
             {selectedSentPairs.map(sentPair => {
               return (
                 <SelectedSentPair
+                  key={sentPair.id}
                   sentPair={sentPair}
                   onRemoveSentPair={handleRemoveSentPair}
                   onSentPairUpdated={fetchSelectedSentPairs} />
