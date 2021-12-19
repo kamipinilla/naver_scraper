@@ -1,10 +1,10 @@
+import { useEffect, useState } from 'react'
 import { SentPair } from '../../../../server/types'
 import Button from '../../widgets/Button'
 import EditSelectedSentPair from './EditSelectedSentPair'
 
 interface Props {
   sentPair: SentPair
-  isEditing: boolean
   onIsEditingChange: (isEditing: boolean) => void
   onRemoveSentPair: (sentPair: SentPair) => void
   onSentPairUpdated: () => void
@@ -13,19 +13,23 @@ interface Props {
 const SelectedSentPair: React.FC<Props> = props => {
   const {
     sentPair,
-    isEditing,
     onIsEditingChange,
     onRemoveSentPair,
     onSentPairUpdated,
   } = props
+
+  const [isEditing, setIsEditing] = useState<boolean>(false)
+  useEffect(function notifyOnIsEditingChange() {
+    onIsEditingChange(isEditing)
+  }, [onIsEditingChange, isEditing])
 
   let display
   if (isEditing) {
     display = (
       <EditSelectedSentPair
         sentPair={sentPair}
-        onSentPairUpdated={() => { onSentPairUpdated(); onIsEditingChange(false) }}
-        onCancel={() => onIsEditingChange(false)} />
+        onSentPairUpdated={() => { onSentPairUpdated(); setIsEditing(false) }}
+        onCancel={() => setIsEditing(false)} />
     )
   } else {
     display = (
@@ -35,7 +39,7 @@ const SelectedSentPair: React.FC<Props> = props => {
           <div>{sentPair.sourceSent}</div>
         </div>
         <div className="flex items-center m-2">
-          <Button onClick={() => onIsEditingChange(true)}>Edit</Button>
+          <Button onClick={() => setIsEditing(true)}>Edit</Button>
         </div>
       </div>
     )

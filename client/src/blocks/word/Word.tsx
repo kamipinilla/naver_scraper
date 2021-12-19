@@ -235,7 +235,6 @@ const goToWords = useCallback((): void => {
                 <SelectedSentPair
                   key={sentPair.id}
                   sentPair={sentPair}
-                  isEditing={isEditing}
                   onIsEditingChange={setIsEditing}
                   onRemoveSentPair={handleRemoveSentPair}
                   onSentPairUpdated={fetchSelectedSentPairs} />
