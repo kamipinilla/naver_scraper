@@ -1,6 +1,15 @@
 import fs from 'fs'
 import readline from 'readline'
 
+export function pathExists(path: string): boolean {
+  return fs.existsSync(path)
+}
+
+export function readFile(path: string): string {
+  const data = fs.readFileSync(path)
+  return data.toString()
+}
+
 export function createLineReader(path: string): readline.Interface {
   const readStream = fs.createReadStream(path)
   const readLineInterface = readline.createInterface({

@@ -5,8 +5,7 @@ import { getWords } from '../../api/words'
 import useKeyPressListener from '../../hooks/useKeyPressListener'
 import { Key } from '../../types'
 import { join } from 'path'
-
-const cachedPositionKey = 'position'
+import { getUserPosition, setUserPosition } from '../../api/userPosition'
 
 const Words: React.FC = () => {
   const [position, setPosition] = useState<number | null>(null)
@@ -18,20 +17,13 @@ const Words: React.FC = () => {
 
   useEffect(function setInitialPosition() {
     if (words !== null) {
-      const cachedPositionStr = localStorage.getItem(cachedPositionKey)
-      if (cachedPositionStr !== null) {
-        const cachedPosition = parseInt(cachedPositionStr)
-        setPosition(cachedPosition)
-      } else {
-        setPosition(0)
-      }
+      getUserPosition().then(setPosition)
     }
   }, [words])
 
   useEffect(function cachePosition() {
     if (position !== null) {
-      const positionStr = position.toString()
-      localStorage.setItem(cachedPositionKey, positionStr)
+      setUserPosition(position)
     }
   }, [position])
 
