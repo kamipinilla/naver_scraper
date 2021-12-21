@@ -6,7 +6,6 @@ const router = express.Router()
 router.get('/', async (req, res) => {
   const content = await getHtmlContent()
   if (content) {
-    console.log('HTML content sent')
     res.json({
       content
     })

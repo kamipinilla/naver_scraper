@@ -10,10 +10,8 @@ export async function setHtmlContent(content: string): Promise<void> {
     const firstHtmlUpdate = htmlUpdates[0]
     firstHtmlUpdate.content = content
     await firstHtmlUpdate.save()
-    console.log('HTML content updated')
   } else {
     const newHtmlUpdate = new HtmlUpdateModel({ content })
     await newHtmlUpdate.save()
-    console.log('HTML content created')
   }
 }
