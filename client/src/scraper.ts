@@ -60,5 +60,5 @@ export function extractNaverExamples(content: string): NaverExample[] {
 }
 
 export function getNaverUrl(searchWord: string, page: number = 1) {
-  return `https://en.dict.naver.com/#/search?range=example&page=${page}&query=${searchWord}&shouldSearchVlive=false&haveTrans=exist:1`
+  return `https://en.dict.naver.com/#/search?range=example&shouldSearchVlive=false&exampleLevel=exist:1&haveTrans=exist:1&page=${page}&query=${searchWord}`
 }
