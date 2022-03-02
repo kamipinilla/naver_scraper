@@ -1,5 +1,5 @@
 # cloze_naver
-Naver web scraper for Korean cloze-test generation.
+Web scraper for English-Korean Naver dictionary (en.dict.naver.com).
 
 # How to run
 
